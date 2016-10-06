@@ -1,0 +1,43 @@
+0x88Fc62CFAC71041f9704c122293e249110c8efbb
+
+
+contract MusicoinLogger {
+    event playEvent(address sender, uint plays);
+    event licenseUpdateEvent(address sender, uint version);
+    event transferEvent(address sender, address oldOwner, address newOwner);
+    event resourceUpdateEvent(address sender, string oldResource, string newResource);
+    event metadataUpdateEvent(address sender, string oldResource, string newResource);
+
+    modifier noCoins {
+        //if (msg.value > 0) throw;
+        _
+    }
+
+    function MusicCoinLogger() noCoins {
+
+    }
+
+    function logPlayEvent(uint plays) noCoins {
+        playEvent(msg.sender, plays);
+    }
+
+    function logLicenseUpdateEvent(uint version) noCoins {
+        licenseUpdateEvent(msg.sender, version);
+    }
+
+    function logTransferEvent(address oldOwner, address newOwner) noCoins {
+        transferEvent(msg.sender, oldOwner, newOwner);
+    }
+
+    function logResourceUpdateEvent(string oldResource, string newResource) noCoins {
+        resourceUpdateEvent(msg.sender, oldResource, newResource);
+    }
+
+    function logMetadataUpdateEvent(string oldMetadata, string newMetadata) noCoins {
+        metadataUpdateEvent(msg.sender, oldMetadata, newMetadata);
+    }
+
+    function() {
+        throw;
+    }
+}

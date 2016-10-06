@@ -1,6 +1,9 @@
 NodeJS Backend for Event listener
 ================
 
+** Check `backup.txt` for configutaion settings **
+
+
 ## Software requirement
 
 ### NodeJS
