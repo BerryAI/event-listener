@@ -98,9 +98,8 @@ var watchEvents = function(contract){
             msg += "\n    - event: " + result.event + "";
             console.log(msg);
 
-
-            // record_database(result.blockNumber, result.args.msg_sender, result.args.msg_value, result.address, result.blockHash, result.logIndex,
-            //                 result.transactionHash, result.transactionIndex, result.event, description);
+            record_database(result.blockNumber, result.args.msg_sender, result.args.msg_value, result.address, result.blockHash, result.logIndex,
+                            result.transactionHash, result.transactionIndex, result.event, description);
         }
     });
 
@@ -115,6 +114,9 @@ var watchEvents = function(contract){
             msg += "\n    - transactionIndex: " + result.transactionIndex + "";
             msg += "\n    - event: " + result.event + "";
             console.log(msg);
+
+            record_database(result.blockNumber, result.args.msg_sender, result.args.msg_value, result.address, result.blockHash, result.logIndex,
+                            result.transactionHash, result.transactionIndex, result.event, description);
         }
     });
 
@@ -129,6 +131,9 @@ var watchEvents = function(contract){
             msg += "\n    - transactionIndex: " + result.transactionIndex + "";
             msg += "\n    - event: " + result.event + "";
             console.log(msg);
+
+            record_database(result.blockNumber, result.args.msg_sender, result.args.msg_value, result.address, result.blockHash, result.logIndex,
+                            result.transactionHash, result.transactionIndex, result.event, description);
         }
     });
 
@@ -143,6 +148,9 @@ var watchEvents = function(contract){
             msg += "\n    - transactionIndex: " + result.transactionIndex + "";
             msg += "\n    - event: " + result.event + "";
             console.log(msg);
+
+            record_database(result.blockNumber, result.args.msg_sender, result.args.msg_value, result.address, result.blockHash, result.logIndex,
+                            result.transactionHash, result.transactionIndex, result.event, description);
         }
     });
 
@@ -158,6 +166,9 @@ var watchEvents = function(contract){
             msg += "\n    - transactionIndex: " + result.transactionIndex + "";
             msg += "\n    - event: " + result.event + "";
             console.log(msg);
+
+            record_database(result.blockNumber, result.args.msg_sender, result.args.msg_value, result.address, result.blockHash, result.logIndex,
+                            result.transactionHash, result.transactionIndex, result.event, description);
         }
     });
 
