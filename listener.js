@@ -66,11 +66,26 @@ var record_database = function(
 
 }
 
+var record_event = function(block_id, contract_address, msg_sender, event_type, description){
+
+    var query = 'INSERT INTO music_event ' +
+        '(`block_id`, `contract_address`, `user_address`, `event_type`, `description`, `datetime`)' +
+        'VALUES (?,?,?,?,?, now()); ';
+
+    connection.query(
+        query,
+        [block_id, contract_address, msg_sender, event_type, description]
+    , function(err, rows, fields) {
+        if (err) throw err;
+    });
+}
+
+
 
 var watchEvents = function(contract){
 
     if(typeof playEvent !== 'undefined' && playEvent){
-        eventIssueManagementFee.stopWatching();
+        playEvent.stopWatching();
     }
     if(typeof licenseUpdateEvent !== 'undefined' && licenseUpdateEvent){
         licenseUpdateEvent.stopWatching();
@@ -90,33 +105,38 @@ var watchEvents = function(contract){
         if (!error) {
             var description = "playEvent by " + result.args.sender + ". plays: " + result.args.plays;
             var msg = "["+ result.blockNumber +"] playEvent recorded";
-            msg += "\n    - address: " + result.address + "";
-            msg += "\n    - blockHash: " + result.blockHash + "";
-            msg += "\n    - logIndex: " + result.logIndex + "";
-            msg += "\n    - transactionHash: " + result.transactionHash + "";
-            msg += "\n    - transactionIndex: " + result.transactionIndex + "";
-            msg += "\n    - event: " + result.event + "";
+            msg += "\n    - MusicoinLogger: " + result.address + "";
+            msg += "\n    - contract: " + result.args.sender + "";
+            // msg += "\n    - blockHash: " + result.blockHash + "";
+            // msg += "\n    - logIndex: " + result.logIndex + "";
+            // msg += "\n    - transactionHash: " + result.transactionHash + "";
+            // msg += "\n    - transactionIndex: " + result.transactionIndex + "";
+            // msg += "\n    - event: " + result.event + "";
+            console.table(result);
             console.log(msg);
 
             record_database(result.blockNumber, result.args.msg_sender, result.args.msg_value, result.address, result.blockHash, result.logIndex,
                             result.transactionHash, result.transactionIndex, result.event, description);
+            record_event(result.blockNumber, result.args.sender, result.args.msg_sender, "playEvent", "")
         }
     });
 
     licenseUpdateEvent = contract.licenseUpdateEvent({}, function(error, result) {
         if (!error) {
-            var description = "licenseUpdateEvent by " + result.args.sender + ". version: " + result.args.version;
+            // var description = "licenseUpdateEvent by " + result.args.sender + ". version: " + result.args.version;
             var msg = "["+ result.blockNumber +"] licenseUpdateEvent recorded";
-            msg += "\n    - address: " + result.address + "";
-            msg += "\n    - blockHash: " + result.blockHash + "";
-            msg += "\n    - logIndex: " + result.logIndex + "";
-            msg += "\n    - transactionHash: " + result.transactionHash + "";
-            msg += "\n    - transactionIndex: " + result.transactionIndex + "";
-            msg += "\n    - event: " + result.event + "";
+            msg += "\n    - MusicoinLogger: " + result.address + "";
+            msg += "\n    - contract: " + result.args.sender + "";
+            // msg += "\n    - blockHash: " + result.blockHash + "";
+            // msg += "\n    - logIndex: " + result.logIndex + "";
+            // msg += "\n    - transactionHash: " + result.transactionHash + "";
+            // msg += "\n    - transactionIndex: " + result.transactionIndex + "";
+            // msg += "\n    - event: " + result.event + "";
             console.log(msg);
 
-            record_database(result.blockNumber, result.args.msg_sender, result.args.msg_value, result.address, result.blockHash, result.logIndex,
-                            result.transactionHash, result.transactionIndex, result.event, description);
+            // record_database(result.blockNumber, result.args.msg_sender, result.args.msg_value, result.address, result.blockHash, result.logIndex,
+            //                 result.transactionHash, result.transactionIndex, result.event, description);
+            record_event(result.blockNumber, result.args.sender, result.args.msg_sender, "licenseUpdateEvent", "")
         }
     });
 
@@ -233,6 +253,48 @@ app.get('/logs', function(req, res){
 });
 
 
+// function onPlayEvent(myContractInstance, callback) {
+//     myContractInstance.playEvent().watch(function(err, val){
+//         if (err) {
+//             console.log(err);
+//         }
+//         else {
+//             callback(val.args);
+//         }
+//     });
+// };
+
+// function onNewLicensePublished(myContractInstance, callback) {
+//     myContractInstance.licenseUpdateEvent().watch(function(err, val){
+//         if (err) {
+//             console.log(err);
+//         }
+//         else {
+//             callback(val.args);
+
+//             // var description = "licenseUpdateEvent by " + val.args.sender + ". version: " + val.args.version;
+//             // var msg = "["+ val.blockNumber +"] licenseUpdateEvent recorded";
+//             // msg += "\n    - address: " + val.address + "";
+//             // msg += "\n    - blockHash: " + val.blockHash + "";
+//             // msg += "\n    - logIndex: " + val.logIndex + "";
+//             // msg += "\n    - transactionHash: " + val.transactionHash + "";
+//             // msg += "\n    - transactionIndex: " + val.transactionIndex + "";
+//             // msg += "\n    - event: " + val.event + "";
+//             // console.log(msg);
+
+//             // record_database(val.blockNumber, val.args.msg_sender, val.args.msg_value, val.address, val.blockHash, val.logIndex,
+//             //                 val.transactionHash, val.transactionIndex, val.event, description);
+
+//         }
+//     });
+// };
+
+// function handle_new_license(args){
+//     console.log(args);
+
+// }
+
+
 app.post('/updateContract', function(req, res){
     console.log('POST /updateContract');
 
@@ -255,6 +317,8 @@ app.post('/updateContract', function(req, res){
     myContractInstanceAddress = address;
 
     watchEvents(myContractInstance);
+    // onPlayEvent(myContractInstance, handle_new_license);
+    // onNewLicensePublished(myContractInstance, handle_new_license);
 
     res.header("Access-Control-Allow-Origin", "*");
     res.writeHead(200, {'Content-Type': 'application/json'});
