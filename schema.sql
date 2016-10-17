@@ -24,3 +24,26 @@ CREATE TABLE `music_event` (
   `description` TEXT NULL,
   `datetime` DATETIME NULL,
   PRIMARY KEY (`id`));
+
+CREATE TABLE `music_play` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `block_id` VARCHAR(45) NOT NULL,
+  `contract_address` VARCHAR(80) NULL,
+  `play_count` INT NULL,
+  `datetime` DATETIME NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE `music_license_blockchain` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `block_id` VARCHAR(45) NOT NULL,
+  `contract_address` VARCHAR(80) NULL,
+  `owner_address` VARCHAR(80) NULL,
+  `version` VARCHAR(45) NULL,
+  `artist_name` VARCHAR(150) NULL,
+  `song_name` VARCHAR(255) NULL,
+  `album_name` VARCHAR(255) NULL,
+  `resource_url` VARCHAR(150) NULL,
+  `artwork_url` VARCHAR(150) NULL,
+  `is_processed` INT(1) NULL,
+  `datetime` DATETIME NULL,
+  PRIMARY KEY (`id`));
