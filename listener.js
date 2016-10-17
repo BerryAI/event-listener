@@ -241,7 +241,7 @@ app.get('/contract', function(req, res){
         }
     }));
 
-};
+});
 
 
 
