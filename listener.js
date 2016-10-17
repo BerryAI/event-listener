@@ -69,12 +69,47 @@ var record_database = function(
 var record_event = function(block_id, contract_address, msg_sender, event_type, description){
 
     var query = 'INSERT INTO music_event ' +
-        '(`block_id`, `contract_address`, `user_address`, `event_type`, `description`, `datetime`)' +
-        'VALUES (?,?,?,?,?, now()); ';
+        '(`block_id`, `contract_address`, `event_type`, `description`, `datetime`)' +
+        'VALUES (?,?,?,?, now()); ';
 
     connection.query(
         query,
         [block_id, contract_address, msg_sender, event_type, description]
+    , function(err, rows, fields) {
+        if (err) throw err;
+    });
+}
+
+var record_music_play = function(block_id, contract_address, play_count){
+
+    var query = 'INSERT INTO music_play ' +
+        '(`block_id`, `contract_address`, `play_count`, `datetime`)' +
+        'VALUES (?,?,?, now()); ';
+
+    connection.query(
+        query,
+        [block_id, contract_address, play_count]
+    , function(err, rows, fields) {
+        if (err) throw err;
+    });
+}
+
+var record_license = function(block_id, contract_address, license_version){
+
+    var query = 'INSERT INTO music_license_blockchain ' +
+        '(`block_id`, `contract_address`, `owner_address`, `version`, `artist_name`, `song_name`, `album_name`, `artwork_url` , `resource_url` ,`is_processed`, `datetime`)' +
+        'VALUES (?,?,?,?,?,?,?,?,?, 0, now()); ';
+
+    var pppAbi = [{"constant":true,"inputs":[],"name":"resourceUrl","outputs":[{"name":"","type":"string"}],"type":"function"},{"constant":false,"inputs":[{"name":"_distributeBalanceFirst","type":"bool"}],"name":"kill","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"metadata","outputs":[{"name":"","type":"string"}],"type":"function"},{"constant":true,"inputs":[],"name":"totalShares","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[],"name":"collectPendingPayment","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"licenseVersion","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[],"name":"metadataVersion","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[],"name":"coinsPerPlay","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"shares","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[],"name":"totalEarned","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[],"name":"distributeBalance","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"type":"function"},{"constant":false,"inputs":[{"name":"newMetadata","type":"string"}],"name":"updateMetadata","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"newResourceUrl","type":"string"}],"name":"updateResourceUrl","outputs":[],"type":"function"},{"constant":false,"inputs":[],"name":"play","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"playCount","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[],"name":"contractVersion","outputs":[{"name":"","type":"string"}],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"pendingPayment","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"_coinsPerPlay","type":"uint256"},{"name":"_recipients","type":"address[]"},{"name":"_shares","type":"uint256[]"}],"name":"updateLicense","outputs":[],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"recipients","outputs":[{"name":"","type":"address"}],"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"type":"function"},{"inputs":[{"name":"_coinsPerPlay","type":"uint256"},{"name":"_resourceUrl","type":"string"},{"name":"_metadata","type":"string"},{"name":"_recipients","type":"address[]"},{"name":"_shares","type":"uint256[]"}],"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"plays","type":"uint256"}],"name":"playEvent","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"version","type":"uint256"}],"name":"licenseUpdateEvent","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldOwner","type":"address"},{"indexed":false,"name":"newOwner","type":"address"}],"name":"transferEvent","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldResource","type":"string"},{"indexed":false,"name":"newResource","type":"string"}],"name":"resourceUpdateEvent","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldResource","type":"string"},{"indexed":false,"name":"newResource","type":"string"}],"name":"metadataUpdateEvent","type":"event"}]
+
+    var ppp = web3.eth.contract(pppAbi).at(contract_address);
+    var metadata = JSON.parse(ppp.metadata());
+
+    console.dir(ppp)
+
+    connection.query(
+        query,
+        [block_id, contract_address, ppp.owner(), license_version, metadata.artist, metadata.track, metadata.album, metadata.artworkUrl, ppp.resourceUrl()]
     , function(err, rows, fields) {
         if (err) throw err;
     });
@@ -107,49 +142,36 @@ var watchEvents = function(contract){
             var msg = "["+ result.blockNumber +"] playEvent recorded";
             msg += "\n    - MusicoinLogger: " + result.address + "";
             msg += "\n    - contract: " + result.args.sender + "";
-            // msg += "\n    - blockHash: " + result.blockHash + "";
-            // msg += "\n    - logIndex: " + result.logIndex + "";
-            // msg += "\n    - transactionHash: " + result.transactionHash + "";
-            // msg += "\n    - transactionIndex: " + result.transactionIndex + "";
-            // msg += "\n    - event: " + result.event + "";
-            console.table(result);
+
+            console.dir(result);
             console.log(msg);
 
-            record_database(result.blockNumber, result.args.msg_sender, result.args.msg_value, result.address, result.blockHash, result.logIndex,
-                            result.transactionHash, result.transactionIndex, result.event, description);
-            record_event(result.blockNumber, result.args.sender, result.args.msg_sender, "playEvent", "")
+            record_music_play(result.blockNumber, result.args.sender, result.args.plays.toNumber())
         }
     });
 
     licenseUpdateEvent = contract.licenseUpdateEvent({}, function(error, result) {
         if (!error) {
-            // var description = "licenseUpdateEvent by " + result.args.sender + ". version: " + result.args.version;
             var msg = "["+ result.blockNumber +"] licenseUpdateEvent recorded";
             msg += "\n    - MusicoinLogger: " + result.address + "";
             msg += "\n    - contract: " + result.args.sender + "";
-            // msg += "\n    - blockHash: " + result.blockHash + "";
-            // msg += "\n    - logIndex: " + result.logIndex + "";
-            // msg += "\n    - transactionHash: " + result.transactionHash + "";
-            // msg += "\n    - transactionIndex: " + result.transactionIndex + "";
-            // msg += "\n    - event: " + result.event + "";
+
+            console.dir(result);
             console.log(msg);
 
-            // record_database(result.blockNumber, result.args.msg_sender, result.args.msg_value, result.address, result.blockHash, result.logIndex,
-            //                 result.transactionHash, result.transactionIndex, result.event, description);
-            record_event(result.blockNumber, result.args.sender, result.args.msg_sender, "licenseUpdateEvent", "")
+            record_license(result.blockNumber, result.args.sender, result.args.version)
         }
     });
 
+    // TODO: requires new DB table for these events
     transferEvent = contract.transferEvent({}, function(error, result) {
         if (!error) {
             var description = "transferEvent by " + result.args.sender + ". oldOwner: " + result.args.oldOwner + ". newOwner: " + result.args.newOwner;
             var msg = "["+ result.blockNumber +"] transferEvent recorded";
-            msg += "\n    - address: " + result.address + "";
-            msg += "\n    - blockHash: " + result.blockHash + "";
-            msg += "\n    - logIndex: " + result.logIndex + "";
-            msg += "\n    - transactionHash: " + result.transactionHash + "";
-            msg += "\n    - transactionIndex: " + result.transactionIndex + "";
-            msg += "\n    - event: " + result.event + "";
+            msg += "\n    - MusicoinLogger: " + result.address + "";
+            msg += "\n    - contract: " + result.args.sender + "";
+
+            console.dir(result);
             console.log(msg);
 
             record_database(result.blockNumber, result.args.msg_sender, result.args.msg_value, result.address, result.blockHash, result.logIndex,
@@ -161,12 +183,10 @@ var watchEvents = function(contract){
         if (!error) {
             var description = "resourceUpdateEvent by " + result.args.sender + ". oldResource: " + result.args.oldResource + ". newResource: " + result.args.newResource;
             var msg = "["+ result.blockNumber +"] resourceUpdateEvent recorded";
-            msg += "\n    - address: " + result.address + "";
-            msg += "\n    - blockHash: " + result.blockHash + "";
-            msg += "\n    - logIndex: " + result.logIndex + "";
-            msg += "\n    - transactionHash: " + result.transactionHash + "";
-            msg += "\n    - transactionIndex: " + result.transactionIndex + "";
-            msg += "\n    - event: " + result.event + "";
+            msg += "\n    - MusicoinLogger: " + result.address + "";
+            msg += "\n    - contract: " + result.args.sender + "";
+
+            console.dir(result);
             console.log(msg);
 
             record_database(result.blockNumber, result.args.msg_sender, result.args.msg_value, result.address, result.blockHash, result.logIndex,
@@ -179,12 +199,10 @@ var watchEvents = function(contract){
         if (!error) {
             var description = "metadataUpdateEvent by " + result.args.sender + ". oldResource: " + result.args.oldResource + ". newResource: " + result.args.newResource;
             var msg = "["+ result.blockNumber +"] metadataUpdateEvent recorded";
-            msg += "\n    - address: " + result.address + "";
-            msg += "\n    - blockHash: " + result.blockHash + "";
-            msg += "\n    - logIndex: " + result.logIndex + "";
-            msg += "\n    - transactionHash: " + result.transactionHash + "";
-            msg += "\n    - transactionIndex: " + result.transactionIndex + "";
-            msg += "\n    - event: " + result.event + "";
+            msg += "\n    - MusicoinLogger: " + result.address + "";
+            msg += "\n    - contract: " + result.args.sender + "";
+
+            console.dir(result);
             console.log(msg);
 
             record_database(result.blockNumber, result.args.msg_sender, result.args.msg_value, result.address, result.blockHash, result.logIndex,
@@ -252,47 +270,6 @@ app.get('/logs', function(req, res){
 
 });
 
-
-// function onPlayEvent(myContractInstance, callback) {
-//     myContractInstance.playEvent().watch(function(err, val){
-//         if (err) {
-//             console.log(err);
-//         }
-//         else {
-//             callback(val.args);
-//         }
-//     });
-// };
-
-// function onNewLicensePublished(myContractInstance, callback) {
-//     myContractInstance.licenseUpdateEvent().watch(function(err, val){
-//         if (err) {
-//             console.log(err);
-//         }
-//         else {
-//             callback(val.args);
-
-//             // var description = "licenseUpdateEvent by " + val.args.sender + ". version: " + val.args.version;
-//             // var msg = "["+ val.blockNumber +"] licenseUpdateEvent recorded";
-//             // msg += "\n    - address: " + val.address + "";
-//             // msg += "\n    - blockHash: " + val.blockHash + "";
-//             // msg += "\n    - logIndex: " + val.logIndex + "";
-//             // msg += "\n    - transactionHash: " + val.transactionHash + "";
-//             // msg += "\n    - transactionIndex: " + val.transactionIndex + "";
-//             // msg += "\n    - event: " + val.event + "";
-//             // console.log(msg);
-
-//             // record_database(val.blockNumber, val.args.msg_sender, val.args.msg_value, val.address, val.blockHash, val.logIndex,
-//             //                 val.transactionHash, val.transactionIndex, val.event, description);
-
-//         }
-//     });
-// };
-
-// function handle_new_license(args){
-//     console.log(args);
-
-// }
 
 
 app.post('/updateContract', function(req, res){
