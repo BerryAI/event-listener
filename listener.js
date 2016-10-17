@@ -214,8 +214,8 @@ var watchEvents = function(contract){
 };
 
 
-app.get('/contract', function(req, res){
-    console.log('GET /contract')
+app.get('/api/contract', function(req, res){
+    console.log('GET /api/contract')
     contract_address = req.query.address;
 
     res.writeHead(200, {'Content-Type': 'application/json'});
