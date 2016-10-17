@@ -220,7 +220,7 @@ app.get('/api/contract', function(req, res){
 
     res.writeHead(200, {'Content-Type': 'application/json'});
 
-    if contract_address == "":
+    if (contract_address == ""):
         res.end(JSON.stringify({
             "success": false,
             "message": "MISSING_PARAMETER:address"
