@@ -161,7 +161,7 @@ var watchEvents = function(contract){
             // console.dir(result);
             // console.log(msg);
 
-            record_license(result.blockNumber, result.args.sender, result.args.version)
+            record_license(result.blockNumber, result.args.sender, result.args.version.toNumber())
         }
     });
 
