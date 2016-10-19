@@ -113,7 +113,7 @@ var record_work_release = function(block_id, contract_address, owner_address, ti
 
     var query = "INSERT INTO music_work_release_bc (" +
 "`block_id`, `contract_address`, `owner_address`, `title`, `artist`, `datetime`)" +
-"VALUES (?,?,?,?, now()); ";
+"VALUES (?,?,?,?,?, now()); ";
 
     connection.query(
         query,
