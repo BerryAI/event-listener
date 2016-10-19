@@ -15,15 +15,7 @@ CREATE TABLE `contract_event` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
 
-CREATE TABLE `music_event` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `block_id` VARCHAR(45) NOT NULL,
-  `contract_address` VARCHAR(80) NULL,
-  `user_address` VARCHAR(80) NULL,
-  `event_type` VARCHAR(45) NULL,
-  `description` TEXT NULL,
-  `datetime` DATETIME NULL,
-  PRIMARY KEY (`id`));
+
 
 CREATE TABLE `music_play` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -33,7 +25,27 @@ CREATE TABLE `music_play` (
   `datetime` DATETIME NULL,
   PRIMARY KEY (`id`));
 
-CREATE TABLE `music_license_blockchain` (
+
+CREATE TABLE `music_work_release_bc` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `block_id` VARCHAR(45) NOT NULL,
+  `contract_address` VARCHAR(80) NULL,
+  `owner_address` VARCHAR(80) NULL,
+  `title` VARCHAR(255) NULL,
+  `artist` VARCHAR(255) NULL,
+  `datetime` DATETIME NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE `music_license_release_bc` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `block_id` VARCHAR(45) NOT NULL,
+  `contract_address` VARCHAR(80) NULL,
+  `work_id` VARCHAR(80) NULL,
+  `datetime` DATETIME NULL,
+  PRIMARY KEY (`id`));
+
+
+CREATE TABLE `music_license_update_bc` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `block_id` VARCHAR(45) NOT NULL,
   `contract_address` VARCHAR(80) NULL,
@@ -45,5 +57,14 @@ CREATE TABLE `music_license_blockchain` (
   `resource_url` VARCHAR(150) NULL,
   `artwork_url` VARCHAR(150) NULL,
   `is_processed` INT(1) NULL,
+  `datetime` DATETIME NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE `music_tip` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `block_id` VARCHAR(45) NULL,
+  `contract_address` VARCHAR(80) NULL,
+  `tip_amount` VARCHAR(45) NULL,
+  `tip_count` VARCHAR(45) NULL,
   `datetime` DATETIME NULL,
   PRIMARY KEY (`id`));

@@ -52,6 +52,7 @@ var record_database = function(
         block_id, msg_sender, msg_value, contract_address, block_hash, log_index,
         transaction_hash, transaction_index, event_name, description
 ){
+    // Deprecated
 
     var query = 'INSERT INTO contract_event ' +
         '(`block_id`, `msg_sender`, `msg_value`, `contract_address`, `block_hash`, `log_index`, `transaction_hash`, `transaction_index`, `event_name`, `description`, `datetime`)' +
@@ -94,9 +95,53 @@ var record_music_play = function(block_id, contract_address, play_count){
     });
 }
 
-var record_license = function(block_id, contract_address, license_version){
+var record_tip = function(block_id, contract_address, tip_amount, tip_count){
 
-    var query = "INSERT INTO music_license_blockchain (" +
+    var query = "INSERT INTO music_tip (" +
+"`block_id`, `contract_address`, `tip_amount`, `tip_count`, `datetime`)" +
+"VALUES (?,?,?,?, now()); ";
+
+    connection.query(
+        query,
+        [block_id, contract_address, tip_amount, tip_count]
+    , function(err, rows, fields) {
+        if (err) throw err;
+    });
+}
+
+var record_work_release = function(block_id, contract_address, owner_address, title, artist){
+
+    var query = "INSERT INTO music_work_release_bc (" +
+"`block_id`, `contract_address`, `owner_address`, `title`, `artist`, `datetime`)" +
+"VALUES (?,?,?,?, now()); ";
+
+    connection.query(
+        query,
+        [block_id, contract_address, owner_address, title, artist]
+    , function(err, rows, fields) {
+        if (err) throw err;
+    });
+}
+
+var record_license_release = function(block_id, contract_address, work_id){
+
+    var query = "INSERT INTO music_license_release_bc (" +
+"`block_id`, `contract_address`, `work_id`, `datetime`)" +
+"VALUES (?,?,?, now()); ";
+
+    connection.query(
+        query,
+        [block_id, contract_address, work_id]
+    , function(err, rows, fields) {
+        if (err) throw err;
+    });
+}
+
+
+
+var record_license_update = function(block_id, contract_address, license_version){
+
+    var query = "INSERT INTO music_license_update_bc (" +
 "`block_id`, `contract_address`, `owner_address`, `version`, `artist_name`," +
 "`song_name`, `album_name`, `resource_url` ,`artwork_url` , `is_processed`, `datetime`)" +
 "VALUES (?,?,?,?,?, ?,?,?,?, 0, now()); ";
@@ -118,11 +163,19 @@ var record_license = function(block_id, contract_address, license_version){
 }
 
 
-
 var watchEvents = function(contract){
 
     if(typeof playEvent !== 'undefined' && playEvent){
         playEvent.stopWatching();
+    }
+    if(typeof tipEvent !== 'undefined' && tipEvent){
+        tipEvent.stopWatching();
+    }
+    if(typeof workReleasedEvent !== 'undefined' && workReleasedEvent){
+        workReleasedEvent.stopWatching();
+    }
+    if(typeof licenseReleasedEvent !== 'undefined' && licenseReleasedEvent){
+        licenseReleasedEvent.stopWatching();
     }
     if(typeof licenseUpdateEvent !== 'undefined' && licenseUpdateEvent){
         licenseUpdateEvent.stopWatching();
@@ -140,30 +193,34 @@ var watchEvents = function(contract){
 
     playEvent = contract.playEvent({}, function(error, result) {
         if (!error) {
-            var description = "playEvent by " + result.args.sender + ". plays: " + result.args.plays;
-            var msg = "["+ result.blockNumber +"] playEvent recorded";
-            msg += "\n    - MusicoinLogger: " + result.address + "";
-            msg += "\n    - contract: " + result.args.sender + "";
-
-            // console.dir(result);
-            // console.log(msg);
-
             record_music_play(result.blockNumber, result.args.sender, result.args.plays.toNumber())
+        }
+    });
+
+    tipEvent = contract.tipEvent({}, function(error, result) {
+        if (!error) {
+            record_tip(result.blockNumber, result.args.sender, result.args.tipAmount.toNumber(), result.args.tipCount.toNumber())
+        }
+    });
+
+    workReleasedEvent = contract.workReleasedEvent({}, function(error, result) {
+        if (!error) {
+            record_work_release(result.blockNumber, result.args.sender, result.args.owner, result.args.title, result.args.artist)
+        }
+    });
+
+    licenseReleasedEvent = contract.licenseReleasedEvent({}, function(error, result) {
+        if (!error) {
+            record_license_release(result.blockNumber, result.args.sender, result.args.work)
         }
     });
 
     licenseUpdateEvent = contract.licenseUpdateEvent({}, function(error, result) {
         if (!error) {
-            var msg = "["+ result.blockNumber +"] licenseUpdateEvent recorded";
-            msg += "\n    - MusicoinLogger: " + result.address + "";
-            msg += "\n    - contract: " + result.args.sender + "";
-
-            // console.dir(result);
-            // console.log(msg);
-
-            record_license(result.blockNumber, result.args.sender, result.args.version.toNumber())
+            record_license_update(result.blockNumber, result.args.sender, result.args.version.toNumber())
         }
     });
+
 
     // TODO: requires new DB table for these events
     transferEvent = contract.transferEvent({}, function(error, result) {
