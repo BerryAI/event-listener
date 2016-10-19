@@ -33,6 +33,7 @@ CREATE TABLE `music_work_release_bc` (
   `owner_address` VARCHAR(80) NULL,
   `title` VARCHAR(255) NULL,
   `artist` VARCHAR(255) NULL,
+  `is_processed` INT(1) NULL,
   `datetime` DATETIME NULL,
   PRIMARY KEY (`id`));
 
@@ -41,6 +42,7 @@ CREATE TABLE `music_license_release_bc` (
   `block_id` VARCHAR(45) NOT NULL,
   `contract_address` VARCHAR(80) NULL,
   `work_id` VARCHAR(80) NULL,
+  `is_processed` INT(1) NULL,
   `datetime` DATETIME NULL,
   PRIMARY KEY (`id`));
 

@@ -67,22 +67,9 @@ var record_database = function(
 
 }
 
-var record_event = function(block_id, contract_address, msg_sender, event_type, description){
-
-    var query = 'INSERT INTO music_event ' +
-        '(`block_id`, `contract_address`, `event_type`, `description`, `datetime`)' +
-        'VALUES (?,?,?,?, now()); ';
-
-    connection.query(
-        query,
-        [block_id, contract_address, msg_sender, event_type, description]
-    , function(err, rows, fields) {
-        if (err) throw err;
-    });
-}
-
 var record_music_play = function(block_id, contract_address, play_count){
 
+    console.log("playEvent recorded at block_id=" + block_id + ", contract_address=" + contract_address)
     var query = 'INSERT INTO music_play ' +
         '(`block_id`, `contract_address`, `play_count`, `datetime`)' +
         'VALUES (?,?,?, now()); ';
@@ -97,6 +84,7 @@ var record_music_play = function(block_id, contract_address, play_count){
 
 var record_tip = function(block_id, contract_address, tip_amount, tip_count){
 
+    console.log("tipEvent recorded at block_id=" + block_id + ", contract_address=" + contract_address)
     var query = "INSERT INTO music_tip (" +
 "`block_id`, `contract_address`, `tip_amount`, `tip_count`, `datetime`)" +
 "VALUES (?,?,?,?, now()); ";
@@ -111,9 +99,10 @@ var record_tip = function(block_id, contract_address, tip_amount, tip_count){
 
 var record_work_release = function(block_id, contract_address, owner_address, title, artist){
 
+    console.log("workReleasedEvent recorded at block_id=" + block_id + ", contract_address=" + contract_address)
     var query = "INSERT INTO music_work_release_bc (" +
-"`block_id`, `contract_address`, `owner_address`, `title`, `artist`, `datetime`)" +
-"VALUES (?,?,?,?,?, now()); ";
+"`block_id`, `contract_address`, `owner_address`, `title`, `artist`, `is_processed`, `datetime`)" +
+"VALUES (?,?,?,?,?, 0,now()); ";
 
     connection.query(
         query,
@@ -125,9 +114,10 @@ var record_work_release = function(block_id, contract_address, owner_address, ti
 
 var record_license_release = function(block_id, contract_address, work_id){
 
+    console.log("licenseReleasedEvent recorded at block_id=" + block_id + ", contract_address=" + contract_address)
     var query = "INSERT INTO music_license_release_bc (" +
-"`block_id`, `contract_address`, `work_id`, `datetime`)" +
-"VALUES (?,?,?, now()); ";
+"`block_id`, `contract_address`, `work_id`, `is_processed`, `datetime`)" +
+"VALUES (?,?,?, 0,now()); ";
 
     connection.query(
         query,
@@ -141,9 +131,10 @@ var record_license_release = function(block_id, contract_address, work_id){
 
 var record_license_update = function(block_id, contract_address, license_version){
 
+    console.log("licenseUpdateEvent recorded at block_id=" + block_id + ", contract_address=" + contract_address)
     var query = "INSERT INTO music_license_update_bc (" +
 "`block_id`, `contract_address`, `owner_address`, `version`, `artist_name`," +
-"`song_name`, `album_name`, `resource_url` ,`artwork_url` , `is_processed`, `datetime`)" +
+"`song_name`, `album_name`, `resource_url` ,`artwork_url`, `is_processed`, `datetime`)" +
 "VALUES (?,?,?,?,?, ?,?,?,?, 0, now()); ";
 
     var pppAbi = [{"constant":true,"inputs":[],"name":"resourceUrl","outputs":[{"name":"","type":"string"}],"type":"function"},{"constant":false,"inputs":[{"name":"_distributeBalanceFirst","type":"bool"}],"name":"kill","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"metadata","outputs":[{"name":"","type":"string"}],"type":"function"},{"constant":true,"inputs":[],"name":"totalShares","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[],"name":"collectPendingPayment","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"licenseVersion","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[],"name":"metadataVersion","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[],"name":"coinsPerPlay","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"shares","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[],"name":"totalEarned","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[],"name":"distributeBalance","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"type":"function"},{"constant":false,"inputs":[{"name":"newMetadata","type":"string"}],"name":"updateMetadata","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"newResourceUrl","type":"string"}],"name":"updateResourceUrl","outputs":[],"type":"function"},{"constant":false,"inputs":[],"name":"play","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"playCount","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[],"name":"contractVersion","outputs":[{"name":"","type":"string"}],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"pendingPayment","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"_coinsPerPlay","type":"uint256"},{"name":"_recipients","type":"address[]"},{"name":"_shares","type":"uint256[]"}],"name":"updateLicense","outputs":[],"type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"recipients","outputs":[{"name":"","type":"address"}],"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"type":"function"},{"inputs":[{"name":"_coinsPerPlay","type":"uint256"},{"name":"_resourceUrl","type":"string"},{"name":"_metadata","type":"string"},{"name":"_recipients","type":"address[]"},{"name":"_shares","type":"uint256[]"}],"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"plays","type":"uint256"}],"name":"playEvent","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"version","type":"uint256"}],"name":"licenseUpdateEvent","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldOwner","type":"address"},{"indexed":false,"name":"newOwner","type":"address"}],"name":"transferEvent","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldResource","type":"string"},{"indexed":false,"name":"newResource","type":"string"}],"name":"resourceUpdateEvent","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldResource","type":"string"},{"indexed":false,"name":"newResource","type":"string"}],"name":"metadataUpdateEvent","type":"event"}]
@@ -161,6 +152,9 @@ var record_license_update = function(block_id, contract_address, license_version
         if (err) throw err;
     });
 }
+
+
+
 
 
 var watchEvents = function(contract){
