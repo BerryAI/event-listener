@@ -15,7 +15,9 @@ CREATE TABLE `contract_event` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
 
-
+--
+-- All DB tables that will record blockchain events
+--
 
 CREATE TABLE `music_play` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -36,6 +38,7 @@ CREATE TABLE `music_work_release_bc` (
   `is_processed` INT(1) NULL,
   `datetime` DATETIME NULL,
   PRIMARY KEY (`id`));
+
 
 CREATE TABLE `music_license_release_bc` (
   `id` INT NOT NULL AUTO_INCREMENT,
