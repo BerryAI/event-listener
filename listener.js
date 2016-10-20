@@ -303,7 +303,7 @@ app.get('/api/contract', function(req, res){
             "totalShares": ppp.totalShares(),
             "licenseVersion": ppp.licenseVersion(),
             "metadataVersion": ppp.metadataVersion(),
-            "coinsPerPlay": ppp.coinsPerPlay(),
+            // "coinsPerPlay": ppp.coinsPerPlay(),
             "totalEarned": ppp.totalEarned(),
             "owner": ppp.owner(),
             "playCount": ppp.playCount()
