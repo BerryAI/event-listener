@@ -284,24 +284,17 @@ app.get('/api/contract', function(req, res){
     var loggerAbi = [{"constant": false, "inputs": [{"name": "oldOwner", "type": "address"}, {"name": "newOwner", "type": "address"} ], "name": "logTransferEvent", "outputs": [], "type": "function"}, {"constant": false, "inputs": [{"name": "oldResource", "type": "string"}, {"name": "newResource", "type": "string"} ], "name": "logResourceUpdateEvent", "outputs": [], "type": "function"}, {"constant": false, "inputs": [{"name": "work", "type": "address"} ], "name": "logLicenseReleased", "outputs": [], "type": "function"}, {"constant": false, "inputs": [{"name": "owner", "type": "address"}, {"name": "title", "type": "string"}, {"name": "artist", "type": "string"} ], "name": "logWorkReleased", "outputs": [], "type": "function"}, {"constant": false, "inputs": [], "name": "MusicCoinLogger", "outputs": [], "type": "function"}, {"constant": false, "inputs": [{"name": "tipAmount", "type": "uint256"}, {"name": "tipCount", "type": "uint256"} ], "name": "logTipEvent", "outputs": [], "type": "function"}, {"constant": false, "inputs": [{"name": "version", "type": "uint256"} ], "name": "logLicenseUpdateEvent", "outputs": [], "type": "function"}, {"constant": false, "inputs": [{"name": "oldMetadata", "type": "string"}, {"name": "newMetadata", "type": "string"} ], "name": "logMetadataUpdateEvent", "outputs": [], "type": "function"}, {"constant": false, "inputs": [{"name": "plays", "type": "uint256"} ], "name": "logPlayEvent", "outputs": [], "type": "function"}, {"anonymous": false, "inputs": [{"indexed": false, "name": "sender", "type": "address"}, {"indexed": false, "name": "plays", "type": "uint256"} ], "name": "playEvent", "type": "event"}, {"anonymous": false, "inputs": [{"indexed": false, "name": "sender", "type": "address"}, {"indexed": false, "name": "tipAmount", "type": "uint256"}, {"indexed": false, "name": "tipCount", "type": "uint256"} ], "name": "tipEvent", "type": "event"}, {"anonymous": false, "inputs": [{"indexed": false, "name": "sender", "type": "address"}, {"indexed": false, "name": "owner", "type": "address"}, {"indexed": false, "name": "title", "type": "string"}, {"indexed": false, "name": "artist", "type": "string"} ], "name": "workReleasedEvent", "type": "event"}, {"anonymous": false, "inputs": [{"indexed": false, "name": "sender", "type": "address"}, {"indexed": false, "name": "work", "type": "address"} ], "name": "licenseReleasedEvent", "type": "event"}, {"anonymous": false, "inputs": [{"indexed": false, "name": "sender", "type": "address"}, {"indexed": false, "name": "version", "type": "uint256"} ], "name": "licenseUpdateEvent", "type": "event"}, {"anonymous": false, "inputs": [{"indexed": false, "name": "sender", "type": "address"}, {"indexed": false, "name": "oldOwner", "type": "address"}, {"indexed": false, "name": "newOwner", "type": "address"} ], "name": "transferEvent", "type": "event"}, {"anonymous": false, "inputs": [{"indexed": false, "name": "sender", "type": "address"}, {"indexed": false, "name": "oldResource", "type": "string"}, {"indexed": false, "name": "newResource", "type": "string"} ], "name": "resourceUpdateEvent", "type": "event"}, {"anonymous": false, "inputs": [{"indexed": false, "name": "sender", "type": "address"}, {"indexed": false, "name": "oldResource", "type": "string"}, {"indexed": false, "name": "newResource", "type": "string"} ], "name": "metadataUpdateEvent", "type": "event"} ]
     var contract = web3.eth.contract(loggerAbi).at(contract_address);
 
-    console.log(contract)
+    // for(i in contract){
+    //     console.log(i)
+    //     // console.log(contract[i])
+    // }
 
     res.end(JSON.stringify({
         "success": true,
         "message": "",
         "contract": {
             "address": contract_address,
-            "balance": web3.eth.getBalance(contract_address),
-            "json": contract
-            // "resourceUrl": "",
-            // "metadata": [],
-            // "totalShares": ppp.totalShares(),
-            // "licenseVersion": ppp.licenseVersion(),
-            // "metadataVersion": ppp.metadataVersion(),
-            // // "coinsPerPlay": ppp.coinsPerPlay(),
-            // "totalEarned": ppp.totalEarned(),
-            // "owner": ppp.owner(),
-            // "playCount": ppp.playCount()
+            "balance": web3.eth.getBalance(contract_address)
         }
     }));
 
