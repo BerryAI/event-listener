@@ -67,7 +67,25 @@ var record_database = function(
 
 }
 
+
 var record_music_play = function(block_id, contract_address, play_count){
+
+    var query = "SELECT * FROM `music_play` WHERE `block_id`=? AND `contract_address`=? AND `play_count`=?"
+    var recordCount = 0
+
+    connection.query(query, [block_id, contract_address, play_count], function(err, rows){
+        if(err)
+            console.log("Error Selecting : %s ",err );
+
+        for(var _i in rows){
+            recordCount++
+        }
+    });
+
+    if(recordCount > 0){
+        console.log("The play event is already recorded. Ending the process")
+        return
+    }
 
     console.log("playEvent recorded at block_id=" + block_id + ", contract_address=" + contract_address)
     var query = 'INSERT INTO music_play ' +
@@ -82,7 +100,25 @@ var record_music_play = function(block_id, contract_address, play_count){
     });
 }
 
+
 var record_tip = function(block_id, contract_address, tip_amount, tip_count){
+
+    var query = "SELECT * FROM `music_tip` WHERE `block_id`=? AND `contract_address`=?"
+    var recordCount = 0
+
+    connection.query(query, [block_id, contract_address], function(err, rows){
+        if(err)
+            console.log("Error Selecting : %s ",err );
+
+        for(var _i in rows){
+            recordCount++
+        }
+    });
+
+    if(recordCount > 0){
+        console.log("The tipEvent event is already recorded. Ending the process")
+        return
+    }
 
     console.log("tipEvent recorded at block_id=" + block_id + ", contract_address=" + contract_address)
     var query = "INSERT INTO music_tip (" +
@@ -97,7 +133,26 @@ var record_tip = function(block_id, contract_address, tip_amount, tip_count){
     });
 }
 
+
 var record_work_release = function(block_id, contract_address, owner_address, title, artist){
+
+
+    var query = "SELECT * FROM `music_work_release_bc` WHERE `contract_address`=?"
+    var recordCount = 0
+
+    connection.query(query, [contract_address], function(err, rows){
+        if(err)
+            console.log("Error Selecting : %s ",err );
+
+        for(var _i in rows){
+            recordCount++
+        }
+    });
+
+    if(recordCount > 0){
+        console.log("The workReleasedEvent event is already recorded. Ending the process")
+        return
+    }
 
     console.log("workReleasedEvent recorded at block_id=" + block_id + ", contract_address=" + contract_address)
     var query = "INSERT INTO music_work_release_bc (" +
@@ -112,7 +167,26 @@ var record_work_release = function(block_id, contract_address, owner_address, ti
     });
 }
 
+
+
 var record_license_release = function(block_id, contract_address, work_id){
+
+    var query = "SELECT * FROM `music_license_release_bc` WHERE `contract_address`=?"
+    var recordCount = 0
+
+    connection.query(query, [contract_address], function(err, rows){
+        if(err)
+            console.log("Error Selecting : %s ",err );
+
+        for(var _i in rows){
+            recordCount++
+        }
+    });
+
+    if(recordCount > 0){
+        console.log("The licenseReleasedEvent event is already recorded. Ending the process")
+        return
+    }
 
     console.log("licenseReleasedEvent recorded at block_id=" + block_id + ", contract_address=" + contract_address)
     var query = "INSERT INTO music_license_release_bc (" +
