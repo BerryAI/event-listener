@@ -154,14 +154,19 @@ var record_work_release = function(block_id, contract_address, owner_address, ti
         return
     }
 
+    var workAbi = [{"constant":true,"inputs":[],"name":"artist","outputs":[{"name":"","type":"string"}],"type":"function"},{"constant":true,"inputs":[],"name":"title","outputs":[{"name":"","type":"string"}],"type":"function"},{"constant":true,"inputs":[],"name":"workType","outputs":[{"name":"","type":"uint8"}],"type":"function"},{"constant":true,"inputs":[],"name":"imageUrl","outputs":[{"name":"","type":"string"}],"type":"function"},{"constant":true,"inputs":[],"name":"metadataUrl","outputs":[{"name":"","type":"string"}],"type":"function"},{"constant":true,"inputs":[],"name":"logger","outputs":[{"name":"","type":"address"}],"type":"function"},{"inputs":[{"name":"_loggerAddress","type":"address"},{"name":"_workType","type":"uint8"},{"name":"_title","type":"string"},{"name":"_artist","type":"string"},{"name":"_imageUrl","type":"string"},{"name":"_metadataUrl","type":"string"}],"type":"constructor"}]
+
+    var work = web3.eth.contract(workAbi).at(contract_address);
+
+
     console.log("workReleasedEvent recorded at block_id=" + block_id + ", contract_address=" + contract_address)
     var query = "INSERT INTO music_work_release_bc (" +
-"`block_id`, `contract_address`, `owner_address`, `title`, `artist`, `is_processed`, `datetime`)" +
-"VALUES (?,?,?,?,?, 0,now()); ";
+"`block_id`, `contract_address`, `owner_address`, `title`, `artist`,  `image_url`, `metadata_url`,  `is_processed`, `datetime`)" +
+"VALUES (?,?,?,?,?, ?,?, 0,now()); ";
 
     connection.query(
         query,
-        [block_id, contract_address, owner_address, title, artist]
+        [block_id, contract_address, owner_address, title, artist,  work.imageUrl(), work.metadataUrl()]
     , function(err, rows, fields) {
         if (err) throw err;
     });
