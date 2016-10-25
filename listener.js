@@ -161,12 +161,12 @@ var record_work_release = function(block_id, contract_address, owner_address, ti
 
     console.log("workReleasedEvent recorded at block_id=" + block_id + ", contract_address=" + contract_address)
     var query = "INSERT INTO music_work_release_bc (" +
-"`block_id`, `contract_address`, `owner_address`, `title`, `artist`,  `image_url`, `metadata_url`,  `is_processed`, `datetime`)" +
-"VALUES (?,?,?,?,?, ?,?, 0,now()); ";
+"`block_id`, `contract_address`, `owner_address`, `title`, `artist`,  `work_type`, `image_url`, `metadata_url`,  `is_processed`, `datetime`)" +
+"VALUES (?,?,?,?,?, ?,?,?, 0,now()); ";
 
     connection.query(
         query,
-        [block_id, contract_address, owner_address, title, artist,  work.imageUrl(), work.metadataUrl()]
+        [block_id, contract_address, owner_address, title, artist,  work.workType(),  work.imageUrl(), work.metadataUrl()]
     , function(err, rows, fields) {
         if (err) throw err;
     });

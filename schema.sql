@@ -35,6 +35,7 @@ CREATE TABLE `music_work_release_bc` (
   `owner_address` VARCHAR(80) NULL,
   `title` VARCHAR(255) NULL,
   `artist` VARCHAR(255) NULL,
+  `work_type` VARCHAR(45) NULL,
   `image_url` VARCHAR(255) NULL,
   `metadata_url` VARCHAR(255) NULL,
   `is_processed` INT(1) NULL,
