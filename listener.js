@@ -166,7 +166,7 @@ var record_work_release = function(block_id, contract_address, owner_address, ti
 
     connection.query(
         query,
-        [block_id, contract_address, owner_address, title, artist,  work.workType(),  work.imageUrl(), work.metadataUrl()]
+        [block_id, contract_address, owner_address, title, artist,  work.workType().toNumber(),  work.imageUrl(), work.metadataUrl()]
     , function(err, rows, fields) {
         if (err) throw err;
     });
