@@ -368,6 +368,34 @@ app.get('/api/contract', function(req, res){
     //     // console.log(contract[i])
     // }
 
+    // Process royalities
+    var _index = 0;
+    var royalities_array = []
+    var royalityAmounts_array = []
+    while(license.royalties(_index) != "0x"){
+        royalities_array.push(license.royalties(_index))
+        royalityAmounts_array.push(license.royaltyAmounts(_index).toNumber())
+        _index++
+
+        if(_index > 500){
+            break
+        }
+    }
+
+    // Process contributorShares
+    _index = 0;
+    var contributors_array = []
+    var contributorShares_array = []
+    while(license.contributors(_index) != "0x"){
+        contributors_array.push(license.contributors(_index))
+        contributorShares_array.push(license.contributorShares(_index).toNumber())
+        _index++
+
+        if(_index > 500){
+            break
+        }
+    }
+
     res.end(JSON.stringify({
         "success": true,
         "message": "",
@@ -375,22 +403,21 @@ app.get('/api/contract', function(req, res){
             "address": contract_address,
             "balance": web3.eth.getBalance(contract_address),
             "resourceUrl": license.resourceUrl(),
-            "totalShares": license.totalShares().toNumber(),
-            "contributors": license.contributors(),
             "licenseVersion": license.licenseVersion().toNumber(),
             "metadataVersion": license.metadataVersion().toNumber(),
             "totalEarned": license.totalEarned(),
-            "royalties": license.royalties(),
+            "royalties": royalities_array,
+            "royaltyAmounts": royalityAmounts_array,
+            "totalTipped": license.totalTipped().toNumber(),
             "workAddress": license.workAddress(),
             "owner": license.owner(),
+            "totalShares": license.totalShares().toNumber(),
+            "contributors": contributors_array,
+            "contributorShares": contributorShares_array,
             "playCount": license.playCount().toNumber(),
             "contractVersion": license.contractVersion(),
             "pendingPayment": license.pendingPayment().toNumber(),
-            "royaltyAmounts": license.royaltyAmounts().toNumber(),
             "weiPerPlay": license.weiPerPlay().toNumber(),
-            "totalTipped": license.totalTipped().toNumber(),
-            // "metadataUrl": license.metadataUrl(),
-            "contributorShares": license.contributorShares().toNumber(),
             "tipCount": license.tipCount().toNumber()
         }
     }));
