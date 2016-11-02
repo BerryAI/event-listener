@@ -239,30 +239,30 @@ var record_license_update = function(block_id, contract_address, license_version
 
 var watchEvents = function(contract){
 
-    if(typeof playEvent !== 'undefined' && playEvent){
-        playEvent.stopWatching();
-    }
-    if(typeof tipEvent !== 'undefined' && tipEvent){
-        tipEvent.stopWatching();
-    }
-    if(typeof workReleasedEvent !== 'undefined' && workReleasedEvent){
-        workReleasedEvent.stopWatching();
-    }
-    if(typeof licenseReleasedEvent !== 'undefined' && licenseReleasedEvent){
-        licenseReleasedEvent.stopWatching();
-    }
-    if(typeof licenseUpdateEvent !== 'undefined' && licenseUpdateEvent){
-        licenseUpdateEvent.stopWatching();
-    }
-    if(typeof transferEvent !== 'undefined' && transferEvent){
-        transferEvent.stopWatching();
-    }
-    if(typeof resourceUpdateEvent !== 'undefined' && resourceUpdateEvent){
-        resourceUpdateEvent.stopWatching();
-    }
-    if(typeof metadataUpdateEvent !== 'undefined' && metadataUpdateEvent){
-        metadataUpdateEvent.stopWatching();
-    }
+    // if(typeof playEvent !== 'undefined' && playEvent){
+    //     playEvent.stopWatching();
+    // }
+    // if(typeof tipEvent !== 'undefined' && tipEvent){
+    //     tipEvent.stopWatching();
+    // }
+    // if(typeof workReleasedEvent !== 'undefined' && workReleasedEvent){
+    //     workReleasedEvent.stopWatching();
+    // }
+    // if(typeof licenseReleasedEvent !== 'undefined' && licenseReleasedEvent){
+    //     licenseReleasedEvent.stopWatching();
+    // }
+    // if(typeof licenseUpdateEvent !== 'undefined' && licenseUpdateEvent){
+    //     licenseUpdateEvent.stopWatching();
+    // }
+    // if(typeof transferEvent !== 'undefined' && transferEvent){
+    //     transferEvent.stopWatching();
+    // }
+    // if(typeof resourceUpdateEvent !== 'undefined' && resourceUpdateEvent){
+    //     resourceUpdateEvent.stopWatching();
+    // }
+    // if(typeof metadataUpdateEvent !== 'undefined' && metadataUpdateEvent){
+    //     metadataUpdateEvent.stopWatching();
+    // }
 
 
     playEvent = contract.playEvent({}, function(error, result) {
