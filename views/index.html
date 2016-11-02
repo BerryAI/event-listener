@@ -30,22 +30,21 @@ textarea#source_code{
 .pick_class_name,
 .abiDefinition{display: none;}
 
-.view_log{
-    position: fixed;z-index: 2;top:6px;right:6px;display: inline-block;vertical-align: top;
-    padding: 8px 16px; border: 1px solid #dadada; background-color: #f7f7fa;
+.logger_contract_info{
+    background-color: #ccc;padding:4px 8px;margin:4px;font-size: 0.9em;background-color: #f4f4f4;
+    border-radius: 4px;display: inline-block;
 }
 </style>
 
 </head>
 <body>
 
-<a href="/logs" target="_blank"><div class="view_log">View Logs</div></a>
 
 <div class="row">
     <div class="col s12">
 
         <div>
-            <h4>Event Listener for Musicoin <span class="testnet_notice">[TESTNET]</span></h4>
+            <h4>Event Listener for Musicoin <span class="testnet_notice">[TestNet/ PrivateNet]</span></h4>
         </div>
 
 
@@ -63,7 +62,7 @@ contract MusicoinLogger {
     event metadataUpdateEvent(address sender, string oldResource, string newResource);
     modifier noCoins {
         if (msg.value > 0) throw;
-        _
+        _;
     }
     function MusicCoinLogger() noCoins {
     }
@@ -178,11 +177,11 @@ contract PayPerPlay {
     modifier adminOnly {
         if (msg.sender != owner) throw;
         if (msg.value > 0) throw;
-        _
+        _;
     }
     modifier noCoins {
         if (msg.value > 0) throw;
-        _
+        _;
     }
     function tip() {
         // fixed royalty payments are
@@ -289,7 +288,7 @@ contract PayPerPlay {
     modifier withDistributionLock {
         if (distributionReentryLock) throw;
         distributionReentryLock = true;
-        _
+        _;
         distributionReentryLock = false;
     }
     function distributePayment(uint _total, bool payRoyalties) withDistributionLock internal {
@@ -331,10 +330,12 @@ contract PayPerPlay {
         <div class="pick_class_name">
             <div>
                 <h5>Fill in contract address</h5>
+                <span class="logger_contract_info">private net: 0x1BA9842b9f4886837edff6D2286342c47Ad8085A </span>
+                <span class="logger_contract_info">testnet: 0x525eA72A00f435765CC8af6303Ff0dB4cBaD4E44 </span>
             </div>
 
             <div class="input-field ">
-                <input placeholder="Contract Address (0xADDRESS...)" id="contract_address" type="text" class="validate" value="0x525eA72A00f435765CC8af6303Ff0dB4cBaD4E44">
+                <input placeholder="Contract Address (0xADDRESS...)" id="contract_address" type="text" class="validate" value="0x1BA9842b9f4886837edff6D2286342c47Ad8085A">
                 <label for="contract_address">Contract Address</label>
             </div>
 
