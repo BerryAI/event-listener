@@ -48,24 +48,24 @@ connect();
 
 
 
-var record_database = function(
-        block_id, msg_sender, msg_value, contract_address, block_hash, log_index,
-        transaction_hash, transaction_index, event_name, description
-){
-    // Deprecated
+// var record_database = function(
+//         block_id, msg_sender, msg_value, contract_address, block_hash, log_index,
+//         transaction_hash, transaction_index, event_name, description
+// ){
+//     // Deprecated
 
-    var query = 'INSERT INTO contract_event ' +
-        '(`block_id`, `msg_sender`, `msg_value`, `contract_address`, `block_hash`, `log_index`, `transaction_hash`, `transaction_index`, `event_name`, `description`, `datetime`)' +
-        'VALUES (?,?,?,?,?, ?,?,?,?,?, now()); ';
+//     var query = 'INSERT INTO contract_event ' +
+//         '(`block_id`, `msg_sender`, `msg_value`, `contract_address`, `block_hash`, `log_index`, `transaction_hash`, `transaction_index`, `event_name`, `description`, `datetime`)' +
+//         'VALUES (?,?,?,?,?, ?,?,?,?,?, now()); ';
 
-    connection.query(
-        query,
-        [block_id, msg_sender, web3.toBigNumber(msg_value).toNumber(), contract_address, block_hash, log_index, transaction_hash, transaction_index, event_name, description]
-    , function(err, rows, fields) {
-        if (err) throw err;
-    });
+//     connection.query(
+//         query,
+//         [block_id, msg_sender, web3.toBigNumber(msg_value).toNumber(), contract_address, block_hash, log_index, transaction_hash, transaction_index, event_name, description]
+//     , function(err, rows, fields) {
+//         if (err) throw err;
+//     });
 
-}
+// }
 
 
 var record_music_play = function(block_id, contract_address, play_count){
@@ -121,6 +121,7 @@ var record_tip = function(block_id, contract_address, tip_amount, tip_count){
     }
 
     console.log("tipEvent recorded at block_id=" + block_id + ", contract_address=" + contract_address)
+    console.log(" - tip_amount=" + tip_amount + ", tip_count=" + tip_count)
     var query = "INSERT INTO music_tip (" +
 "`block_id`, `contract_address`, `tip_amount`, `tip_count`, `datetime`)" +
 "VALUES (?,?,?,?, now()); ";
@@ -306,8 +307,8 @@ var watchEvents = function(contract){
             console.dir(result);
             console.log(msg);
 
-            record_database(result.blockNumber, result.args.msg_sender, result.args.msg_value, result.address, result.blockHash, result.logIndex,
-                            result.transactionHash, result.transactionIndex, result.event, description);
+            // record_database(result.blockNumber, result.args.msg_sender, result.args.msg_value, result.address, result.blockHash, result.logIndex,
+            //                 result.transactionHash, result.transactionIndex, result.event, description);
         }
     });
 
@@ -321,8 +322,8 @@ var watchEvents = function(contract){
             console.dir(result);
             console.log(msg);
 
-            record_database(result.blockNumber, result.args.msg_sender, result.args.msg_value, result.address, result.blockHash, result.logIndex,
-                            result.transactionHash, result.transactionIndex, result.event, description);
+            // record_database(result.blockNumber, result.args.msg_sender, result.args.msg_value, result.address, result.blockHash, result.logIndex,
+            //                 result.transactionHash, result.transactionIndex, result.event, description);
         }
     });
 
@@ -337,8 +338,8 @@ var watchEvents = function(contract){
             console.dir(result);
             console.log(msg);
 
-            record_database(result.blockNumber, result.args.msg_sender, result.args.msg_value, result.address, result.blockHash, result.logIndex,
-                            result.transactionHash, result.transactionIndex, result.event, description);
+            // record_database(result.blockNumber, result.args.msg_sender, result.args.msg_value, result.address, result.blockHash, result.logIndex,
+            //                 result.transactionHash, result.transactionIndex, result.event, description);
         }
     });
 
