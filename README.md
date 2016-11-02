@@ -90,10 +90,18 @@ You will need to run Geth with RPC, please add more flags accordingly:
 
 `geth --datadir ~/.musicoin --networkid 55313716 --identity Musicoin --port 30303 --rpc --rpcapi=db,eth,net,web3,personal --rpcport 8545 --rpcaddr 127.0.0.1 --rpccorsdomain localhost console`
 
+If you are running the mining node, you may simply execute:
+`geth --identity Musicoin --networkid 55313716 --datadir ~/.musicoin console`
+
+And then create a wallet before mining
+
+`personal.newAccount()`
+`miner.start()`
+
 `Ctrl+a then d` to detach current `screen` session. Geth console continues running in backend
 
 
-### Follow the steps below for setting event listener:
+## Setting up event listener:
 
 _Prerequisites: MusicoinLogger contract has to be deployed into the network in advance. Otherwise no events can be listened._
 
