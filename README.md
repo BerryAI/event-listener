@@ -86,16 +86,23 @@ After it is successfully compiled, copy it so user can access it from any locati
 
 ## Connect the musicoin genesis blockchain
 
+#### If you are setting up listener:
+
 You will need to run Geth with RPC, please add more flags accordingly:
 
 `geth --datadir ~/.musicoin --networkid 55313716 --identity Musicoin --port 30303 --rpc --rpcapi=db,eth,net,web3,personal --rpcport 8545 --rpcaddr 127.0.0.1 --rpccorsdomain localhost console`
 
-If you are running the mining node, you may simply execute:
+#### If you are setting up miner node:
+
+You may simply execute:
 `geth --identity Musicoin --networkid 55313716 --datadir ~/.musicoin console`
 
 And then create a wallet before mining
 
 `personal.newAccount()`
+
+then start mining with
+
 `miner.start()`
 
 `Ctrl+a then d` to detach current `screen` session. Geth console continues running in backend
