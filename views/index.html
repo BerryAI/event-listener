@@ -32,7 +32,7 @@ textarea#source_code{
 
 .logger_contract_info{
     background-color: #ccc;padding:4px 8px;margin:4px;font-size: 0.9em;background-color: #f4f4f4;
-    border-radius: 4px;display: inline-block;
+    border-radius: 4px;display: inline-block;cursor: pointer;
 }
 </style>
 
@@ -330,8 +330,8 @@ contract PayPerPlay {
         <div class="pick_class_name">
             <div>
                 <h5>Fill in contract address</h5>
-                <span class="logger_contract_info">private net: 0x1BA9842b9f4886837edff6D2286342c47Ad8085A </span>
-                <span class="logger_contract_info">testnet: 0x525eA72A00f435765CC8af6303Ff0dB4cBaD4E44 </span>
+                <span class="logger_contract_info">private net: <span>0x1BA9842b9f4886837edff6D2286342c47Ad8085A</span></span>
+                <span class="logger_contract_info">testnet: <span>0x525eA72A00f435765CC8af6303Ff0dB4cBaD4E44</span></span>
             </div>
 
             <div class="input-field ">
@@ -368,6 +368,10 @@ contract PayPerPlay {
 <script type="text/javascript">
 
 var json_compiled;
+
+$(".logger_contract_info").click(function(){
+    $("#contract_address").val($(this).find("span").text());
+});
 
 $(".submit_button").click(function(){
 
